@@ -1,0 +1,112 @@
+#include <Adafruit_CircuitPlayground.h>
+
+bool lb; //lt
+bool rb; //ht
+
+bool lbf;
+bool rbf;
+
+int lvl;
+int nlvl;
+
+int ht = 500; //rb
+int lt = 300; //lb
+
+void setup() {
+  Serial.begin(9600);
+  CircuitPlayground.begin();
+
+  lvl = 1;
+  nlvl = 1;
+  }
+
+void loop() {
+  lbf = CircuitPlayground.leftButton();
+  rbf = CircuitPlayground.rightButton();
+
+
+
+  if (lbf != true)
+  lb = false;
+  if (lbf == true)
+  lb = true;
+
+  if (rbf != true)
+  rb = false;
+  if (rbf == true)
+  rb = true;
+
+if (nlvl == 1)
+  if (lvl == 1)
+    nlvl++;
+    lvl1t();
+}
+
+int n = 0;
+
+int lvl1t() {
+  if (n == 0) {
+  CircuitPlayground.playTone(ht, 100);
+  delay(500);
+  CircuitPlayground.playTone(lt, 100);
+  delay(500);
+  CircuitPlayground.playTone(ht, 100);
+  delay(500);
+  n++;
+  lvl1a();
+  }
+}
+
+int lvl1a() {
+  if (n == 1) {
+      CircuitPlayground.playTone(1000, 100);
+    if (rb == false) {
+      delay(1);
+    } else if (rb == true) {
+      CircuitPlayground.playTone(ht, 100);
+      n++;
+      lvl1b();
+    } else if (lb == true) {
+      lose();
+    }
+  }
+}
+
+int lvl1b() {
+  if (n == 2) {
+    CircuitPlayground.playTone(900, 100);
+    if (lb == false) {
+      delay(1);
+    } else if (lb == true) {
+      CircuitPlayground.playTone(lt, 100);
+      n++;
+      lvl1c();
+    } else if (rb == true) {
+      lose();
+    }
+  }
+}
+
+int lvl1c() {
+  if (n == 3) {
+    CircuitPlayground.playTone(800, 100);
+    if (rb == false) {
+      delay(1);
+    } else if (rb == true) {
+      CircuitPlayground.playTone(ht, 100);
+      n++;
+      lvl++;
+      victory();
+    } else if (lb == true) {
+      lose();
+    }
+  }
+}
+
+void victory() {
+  CircuitPlayground.playTone(1100, 100);
+}
+
+void lose() {
+  CircuitPlayground.playTone(100, 100);
+}
