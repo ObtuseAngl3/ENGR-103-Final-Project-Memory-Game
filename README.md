@@ -1,3 +1,23 @@
-The main basis of my memory game is to listen to the tones played through the speaker, then press the buttons in the correct order. If you succeed, a happy tone will be played and the neopixels will flash green, and if you fail to do so, the arduino will flash red and there will be a tone that will let you know. After passing the first level it will then proceed to play a harder longer level.
+Game
 
-	The game will utilize the two buttons (Left and Right), the speaker, and the neopixels to play. The two buttons will be used as the main inputs, when pressed they will play their respective tone. The speaker will be the main output because it will play the tones to be memorized, the tones when buttons are pressed, and the tones when each level is complete. I would also like to make a little song that will be played after completing all of the levels. I would like to have at least five levels, but if all else fails, three is sufficient. If I decide to have five levels, I will allow the player to restart the level they just replayed, but if I only have three then I will have the player restart from level one on a loss. I will also have certain neopixels light up to display what level you are on while flashing red or green when the player wins or loses a level. For the extra credit, I will have the slide switch decide whether the speaker plays a tone or speaks.
+The memory game is played by listening to the sequence of tones, then pressing the correct buttons in order. If you press the wrong button at any point in time, the game will verbally say "Fail", but if you  manage to complete a level, you will be met with a "PASS". There are three levels, each getting longer and faster. Though there us no time limit, the sequence is only played once per Win/Loss.
+
+
+Rules
+
+1. Listen for the sequence
+2. Repeat the sequence with the buttons. (Right for High tone and Left for Low Tone)
+3. If you mess up, the sequence will play again and you have another chance.(infinite Lives)
+4. Have fun!
+
+
+Inputs
+
+Left Button
+Right Button
+
+
+Outputs
+
+Speakers
+Neopixels
