@@ -1,112 +1,521 @@
 #include <Adafruit_CircuitPlayground.h>
+#include <Wire.h>
+#include <SPI.h>
 
-bool lb; //lt
-bool rb; //ht
-
-bool lbf;
-bool rbf;
-
+//Level Value
 int lvl;
-int nlvl;
+int a;
+int b;
+int c;
 
-int ht = 500; //rb
-int lt = 300; //lb
+//Level 1 While loop numbers
+int aa; int ab; int ac;
+
+//Level 2 While loop numbers
+int ba; int bb; int bc; int bd; int be;
+
+//Level 3 While loop numbers
+int ca; int cb; int cc; int cd; int ce; int cf; int cg;
+
+//Button Boolean
+bool l;
+bool r;
+
+//Voice Words
+const uint8_t spPASS[]  PROGMEM = { 0x0A, 0xC8, 0x33, 0x83, 0x03, 0xA3, 0xEC, 0x55, 0x2D, 0xD4, 0x12, 0xAF, 0xAA, 0x04, 0xC9, 0xD4, 0x0E, 0x7D, 0xAA, 0x16, 0x4A, 0x33, 0x65, 0xCE, 0xAD, 0x6F, 0x7D, 0x9A, 0x9A, 0xDC, 0xDB, 0x62, 0xEE, 0x6D, 0x6E, 0x73, 0xC6, 0x12, 0xDD, 0x5B, 0x6B, 0xEE, 0x5D, 0xF6, 0x3A, 0xCE, 0xAA, 0xD2, 0x26, 0xED, 0x75, 0xBB, 0x9B, 0x4D, 0x6D, 0xF1, 0x25, 0xFD, 0x77, 0x7F, 0xEF, 0xD2, 0xCE, 0x9D, 0x46, 0x00, 0x4B, 0x17, 0x2B, 0xE0, 0x8F, 0x52, 0x0B, 0x68, 0x40, 0x02, 0x1C, 0x90, 0xC0, 0xFF, 0x03 };
+const uint8_t spFAIL[]  PROGMEM = { 0x04, 0x98, 0x3E, 0x8D, 0x03, 0x1C, 0xD0, 0x80, 0x07, 0x4A, 0xBF, 0x54, 0x9B, 0x3A, 0x79, 0x9C, 0xCD, 0xAA, 0x9B, 0x0F, 0x31, 0x8F, 0x37, 0xB7, 0xBE, 0xCD, 0x6A, 0x47, 0x2A, 0x66, 0xB3, 0xB7, 0xB3, 0xDB, 0x6B, 0x5F, 0xC7, 0x56, 0x44, 0x58, 0x8E, 0x76, 0xAA, 0x7B, 0xD8, 0x33, 0xB9, 0x32, 0xD7, 0x3C, 0xF9, 0x0C, 0x67, 0xD4, 0x13, 0x9E, 0x98, 0xC7, 0x5F, 0xEE, 0x49, 0x7C, 0xAA, 0x8D, 0xF3, 0xF9, 0xF7, 0xFF, 0x01 };
+const uint8_t spSTART[] PROGMEM = {0x04,0xF8,0xC5,0x9C,0x03,0x1A,0xD0,0x80,0x04,0x38,0x00,0x06,0x58,0x22,0x7D,0x65,0x9D,0x87,0x8B,0x5B,0xD7,0x53,0x67,0x37,0x96,0x21,0x79,0x6F,0x7D,0xEB,0xD5,0x64,0xB7,0x92,0x43,0x9B,0xC7,0x50,0xDD,0x92,0x1D,0xF7,0x9E,0x53,0xDF,0xDD,0x59,0xCB,0x21,0xAD,0xF6,0x46,0xA0,0x08,0xE5,0x2E,0x22,0x1B,0x40,0x01,0xDD,0xB2,0x2A,0xE0,0xB7,0x0C,0x03,0x4C,0x9D,0x4A,0x80,0xEA,0x54,0xFE,0x1F};
+
 
 void setup() {
   Serial.begin(9600);
   CircuitPlayground.begin();
 
+  attachInterrupt(digitalPinToInterrupt(4), lb, FALLING);  //Left Button Interupt
+  attachInterrupt(digitalPinToInterrupt(5), rb, FALLING);  //Right Button Interupt
+
   lvl = 1;
-  nlvl = 1;
-  }
+  a = 0;
+  b = 0;
+  c = 0;
+}
 
 void loop() {
-  lbf = CircuitPlayground.leftButton();
-  rbf = CircuitPlayground.rightButton();
+  l = false;
+  r = false;
 
-
-
-  if (lbf != true)
-  lb = false;
-  if (lbf == true)
-  lb = true;
-
-  if (rbf != true)
-  rb = false;
-  if (rbf == true)
-  rb = true;
-
-if (nlvl == 1)
-  if (lvl == 1)
-    nlvl++;
-    lvl1t();
+  if (lvl == 1) {  //if level 1, start level 1
+    if (a == 0) {
+      a++;
+      lvl1t();
+    }
+  } else if (lvl == 2) {  //if level 2, start level 2
+    if (b == 0) {
+      b++;
+      lvl2t();
+    }
+  } else if (lvl == 3) {  //if level 3, start level 3
+    if (c == 0) {
+      c++;
+      lvl3t();
+    }
+  }
 }
 
-int n = 0;
+void lb() {  //Left Button Interupt
+  l = true;
+}
 
-int lvl1t() {
-  if (n == 0) {
-  CircuitPlayground.playTone(ht, 100);
-  delay(500);
-  CircuitPlayground.playTone(lt, 100);
-  delay(500);
-  CircuitPlayground.playTone(ht, 100);
-  delay(500);
-  n++;
+void rb() {  //Right Button Interupt
+  r = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+//Level 1
+
+void lvl1t() {  //Level 1 Sequence
+  CircuitPlayground.playTone(600, 500); 
+  CircuitPlayground.speaker.say(spSTART);
+  CircuitPlayground.playTone(500, 200);  //High Tone  a
+  CircuitPlayground.playTone(300, 200);  //Low Tone   b
+  CircuitPlayground.playTone(500, 200);  //High Tone  c
   lvl1a();
-  }
 }
 
-int lvl1a() {
-  if (n == 1) {
-      CircuitPlayground.playTone(1000, 100);
-    if (rb == false) {
-      delay(1);
-    } else if (rb == true) {
-      CircuitPlayground.playTone(ht, 100);
-      n++;
+void lvl1a() {  //Looking for Right Button
+  for (int i = 4; i < 6; i++) {
+      CircuitPlayground.setPixelColor(i, 255, 255, 255);
+      }
+  aa = 0;
+  while (aa == 0) {
+    if (l == true) {
+      CircuitPlayground.setPixelColor(0, 255, 0, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      aa++;
+      lvl1l();
+    } else if (r == true) {
+      CircuitPlayground.setPixelColor(9, 0, 255, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      aa++;
       lvl1b();
-    } else if (lb == true) {
-      lose();
     }
   }
 }
 
-int lvl1b() {
-  if (n == 2) {
-    CircuitPlayground.playTone(900, 100);
-    if (lb == false) {
-      delay(1);
-    } else if (lb == true) {
-      CircuitPlayground.playTone(lt, 100);
-      n++;
+void lvl1b() {  //Looking for Left Button
+  for (int i = 4; i < 7; i++) {
+    CircuitPlayground.setPixelColor(i, 255, 255, 255);
+    }
+  ab = 0;
+  while (ab == 0) {
+    if (r == true) {
+      CircuitPlayground.setPixelColor(9, 255, 0, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      ab++;
+      lvl1l();
+    } else if (l == true) {
+      CircuitPlayground.setPixelColor(0, 0, 255, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      ab++;
       lvl1c();
-    } else if (rb == true) {
-      lose();
     }
   }
 }
 
-int lvl1c() {
-  if (n == 3) {
-    CircuitPlayground.playTone(800, 100);
-    if (rb == false) {
-      delay(1);
-    } else if (rb == true) {
-      CircuitPlayground.playTone(ht, 100);
-      n++;
-      lvl++;
-      victory();
-    } else if (lb == true) {
-      lose();
+void lvl1c() {  //Looking for Right Button
+  for (int i = 3; i < 7; i++) {
+      CircuitPlayground.setPixelColor(i, 255, 255, 255);
+      }
+  ac = 0;
+  while (ac == 0) {
+    if (l == true) {
+      CircuitPlayground.setPixelColor(0, 255, 0, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      ac++;
+      lvl1l();
+    } else if (r == true) {
+      CircuitPlayground.setPixelColor(9, 0, 255, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      ac++;
+      lvl1w();
     }
   }
 }
 
-void victory() {
-  CircuitPlayground.playTone(1100, 100);
+void lvl1w() {  //Win
+  CircuitPlayground.setPixelColor(5, 255, 255, 255);
+  CircuitPlayground.speaker.say(spPASS);
+  CircuitPlayground.clearPixels();
+  lvl++;
+  void loop();
 }
 
-void lose() {
-  CircuitPlayground.playTone(100, 100);
+void lvl1l() {  //Loss
+  CircuitPlayground.speaker.say(spFAIL);
+  lvl1t();
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//Level 2
+
+void lvl2t() {  //Level 2 sequence
+CircuitPlayground.playTone(600, 500);
+  CircuitPlayground.speaker.say(spSTART);
+  CircuitPlayground.playTone(500, 150);  //High Tone  a
+  CircuitPlayground.playTone(300, 150);  //Low Tone   b
+  CircuitPlayground.playTone(500, 150);  //High Tone  c
+  CircuitPlayground.playTone(500, 150);  //High Tone  d
+  CircuitPlayground.playTone(300, 150);  //Low Tone   e
+  lvl2a();
+}
+
+void lvl2a() {  //Looking for Right Button
+  for (int i = 4; i < 6; i++) {
+      CircuitPlayground.setPixelColor(i, 255, 255, 255);
+      }
+  ba = 0;
+  while (ba == 0) {
+    if (l == true) {
+      CircuitPlayground.setPixelColor(0, 255, 0, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      ba++;
+      lvl2l();
+    } else if (r == true) {
+      CircuitPlayground.setPixelColor(9, 0, 255, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      ba++;
+      lvl2b();
+    }
+  }
+}
+
+void lvl2b() {  //Looking for Left Button
+  for (int i = 4; i < 7; i++) {
+    CircuitPlayground.setPixelColor(i, 255, 255, 255);
+    }
+  bb = 0;
+  while (bb == 0) {
+    if (r == true) {
+      CircuitPlayground.setPixelColor(9, 255, 0, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      bb++;
+      lvl1l();
+    } else if (l == true) {
+      CircuitPlayground.setPixelColor(0, 0, 255, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      bb++;
+      lvl2c();
+    }
+  }
+}
+
+void lvl2c() {  //Looking for Right Button
+  for (int i = 3; i < 7; i++) {
+      CircuitPlayground.setPixelColor(i, 255, 255, 255);
+      }
+  bc = 0;
+  while (bc == 0) {
+    if (l == true) {
+      CircuitPlayground.setPixelColor(0, 255, 0, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      bc++;
+      lvl2l();
+    } else if (r == true) {
+      CircuitPlayground.setPixelColor(9, 0, 255, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      bc++;
+      lvl2d();
+    }
+  }
+}
+
+void lvl2d() {  //Looking for Right Button
+  for (int i = 3; i < 8; i++) {
+    CircuitPlayground.setPixelColor(i, 255, 255, 255);
+    }
+  bd = 0;
+  while (bd == 0) {
+    if (l == true) {
+      CircuitPlayground.setPixelColor(0, 255, 0, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      bd++;
+      lvl2l();
+    } else if (r == true) {
+      CircuitPlayground.setPixelColor(9, 0, 255, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      bd++;
+      lvl2e();
+    }
+  }
+}
+
+void lvl2e() {  //Looking for Left Button
+  for (int i = 2; i < 8; i++) {
+    CircuitPlayground.setPixelColor(i, 255, 255, 255);
+    }
+  be = 0;
+  while (be == 0) {
+    if (r == true) {
+      CircuitPlayground.setPixelColor(9, 255, 0, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      be++;
+      lvl2l();
+    } else if (l == true) {
+      CircuitPlayground.setPixelColor(0, 0, 255, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      be++;
+      lvl2w();
+    }
+  }
+}
+
+void lvl2w() {  //Win
+  CircuitPlayground.setPixelColor(5, 255, 255, 255);
+  CircuitPlayground.speaker.say(spPASS);
+  CircuitPlayground.clearPixels();
+  lvl++;
+  void loop();
+}
+
+void lvl2l() {  //Loss
+  CircuitPlayground.speaker.say(spFAIL);
+  lvl2t();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+//Level 3
+
+void lvl3t() { //Level 3 Sequence
+  CircuitPlayground.playTone(600, 500);
+  CircuitPlayground.speaker.say(spSTART);
+  CircuitPlayground.playTone(500, 75);  //High Tone a
+  CircuitPlayground.playTone(300, 75);  //Low Tone  b
+  CircuitPlayground.playTone(500, 75);  //High Tone c
+  CircuitPlayground.playTone(500, 75);  //High Tone d
+  CircuitPlayground.playTone(300, 75);  //Low Tone  e
+  CircuitPlayground.playTone(300, 75);  //Low Tone  f
+  CircuitPlayground.playTone(500, 75);  //High Tone g
+  lvl3a();
+}
+
+void lvl3a() {  //Looking for Right Button
+  for (int i = 4; i < 6; i++) {
+      CircuitPlayground.setPixelColor(i, 255, 255, 255);
+      }
+  ca = 0;
+  while (ca == 0) {
+    if (l == true) {
+      CircuitPlayground.setPixelColor(0, 255, 0, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      ca++;
+      lvl3l();
+    } else if (r == true) {
+      CircuitPlayground.setPixelColor(9, 0, 255, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      ca++;
+      lvl3b();
+    }
+  }
+}
+
+void lvl3b() {  //Looking for Left Button
+  for (int i = 4; i < 7; i++) {
+    CircuitPlayground.setPixelColor(i, 255, 255, 255);
+    }
+  cb = 0;
+  while (cb == 0) {
+    if (r == true) {
+      CircuitPlayground.setPixelColor(9, 255, 0, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      cb++;
+      lvl3l();
+    } else if (l == true) {
+      CircuitPlayground.setPixelColor(0, 0, 255, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      cb++;
+      lvl3c();
+    }
+  }
+}
+
+void lvl3c() {  //Looking for Right Button
+  for (int i = 3; i < 7; i++) {
+      CircuitPlayground.setPixelColor(i, 255, 255, 255);
+      }
+  cc = 0;
+  while (cc == 0) {
+    if (l == true) {
+      CircuitPlayground.setPixelColor(0, 255, 0, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      cc++;
+      lvl3l();
+    } else if (r == true) {
+      CircuitPlayground.setPixelColor(9, 0, 255, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      cc++;
+      lvl3d();
+    }
+  }
+}
+
+void lvl3d() {  //Looking for Right Button
+  for (int i = 3; i < 8; i++) {
+    CircuitPlayground.setPixelColor(i, 255, 255, 255);
+    }
+  cd = 0;
+  while (cd == 0) {
+    if (l == true) {
+      CircuitPlayground.setPixelColor(0, 255, 0, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      cd++;
+      lvl3l();
+    } else if (r == true) {
+      CircuitPlayground.setPixelColor(9, 0, 255, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      cd++;
+      lvl3e();
+    }
+  }
+}
+
+void lvl3e() {  //Looking for Left Button
+  for (int i = 2; i < 8; i++) {
+    CircuitPlayground.setPixelColor(i, 255, 255, 255);
+    }
+  ce = 0;
+  while (ce == 0) {
+    if (r == true) {
+      CircuitPlayground.setPixelColor(9, 255, 0, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      ce++;
+      lvl3l();
+    } else if (l == true) {
+      CircuitPlayground.setPixelColor(0, 0, 255, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      ce++;
+      lvl3f();
+    }
+  }
+}
+
+void lvl3f() {  //Looking for Left Button
+  for (int i = 2; i < 9; i++) {
+    CircuitPlayground.setPixelColor(i, 255, 255, 255);
+    }
+  cf = 0;
+  while (cf == 0) {
+    if (r == true) {
+      CircuitPlayground.setPixelColor(9, 255, 0, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      cf++;
+      lvl3l();
+    } else if (l == true) {
+      CircuitPlayground.setPixelColor(0, 0, 255, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      cf++;
+      lvl3g();
+    }
+  }
+}
+
+void lvl3g() {  //Looking for Right Button
+  for (int i = 1; i < 8; i++) {
+    CircuitPlayground.setPixelColor(i, 255, 255, 255);
+    }
+  cg = 0;
+  while (cg == 0) {
+    if (l == true) {
+      CircuitPlayground.setPixelColor(0, 255, 0, 0);
+      CircuitPlayground.playTone(300, 200);
+      CircuitPlayground.clearPixels();
+      l = false;
+      cg++;
+      lvl3l();
+    } else if (r == true) {
+      CircuitPlayground.setPixelColor(9, 0, 255, 0);
+      CircuitPlayground.playTone(500, 200);
+      CircuitPlayground.clearPixels();
+      r = false;
+      cg++;
+      lvl3w();
+    }
+  }
+}
+
+void lvl3w() {  //Win
+  CircuitPlayground.speaker.say(spPASS);
+  CircuitPlayground.playTone(100, 150);
+  CircuitPlayground.playTone(200, 150);
+  CircuitPlayground.playTone(300, 150);
+  CircuitPlayground.playTone(200, 150);
+  CircuitPlayground.playTone(300, 150);
+  CircuitPlayground.playTone(400, 150);
+  CircuitPlayground.playTone(300, 150);
+  CircuitPlayground.playTone(400, 150);
+  CircuitPlayground.playTone(500, 150);
+  CircuitPlayground.playTone(400, 150);
+  CircuitPlayground.playTone(600, 150);
+  CircuitPlayground.playTone(800, 150);
+  lvl++;
+}
+
+void lvl3l() {  //Loss
+  CircuitPlayground.speaker.say(spFAIL);
+  lvl3t();
 }
